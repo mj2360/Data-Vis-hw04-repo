@@ -7,8 +7,6 @@ var checker;
 
 var colorChoices = []; 
 var colors = [];
-//used as a selector for random item in colors array
-var color;
 
 //Dictionary for unique patterns for Question 2
 var pattern ={};
@@ -20,13 +18,10 @@ var alphabet = {};
 //all of the answers for Question 1
 var letterChoices = [];
 
-var font1; 
-var font2; 
-var font3; 
-var font4; 
-var font5; 
-var font6; 
-var fonts = [font1, font2, font3, font4, font5, font6]; 
+//holds the Alphabet Objects
+var objectAlpha = [];
+
+var fonts = []; 
 
 
 function preload(){
@@ -38,13 +33,8 @@ function preload(){
     chev = loadImage("assets/pattern-1.jpg");
     checker = loadImage("assets/pattern-0.jpg");
 
-//fonts
-    font1 = loadFont('assets/rock.ttf');
-    font2 = loadFont('assets/seymour.ttf');   
-    font3 = loadFont('assets/marker.ttf');   
-    font4 = loadFont('assets/lobster.ttf');   
-    font5 = loadFont('assets/reggae.ttf');   
-    font6 = loadFont('assets/oi.ttf');         
+//fonts  
+    fonts =[loadFont('assets/rock.ttf'), loadFont('assets/seymour.ttf'), loadFont('assets/marker.ttf'), loadFont('assets/lobster.ttf'), loadFont('assets/reggae.ttf'), loadFont('assets/oi.ttf')];  
     
 }
 
@@ -59,7 +49,8 @@ function setup(){
              colors.push(colorChoices[i]);
             }
 
-    } print(colors);
+    } 
+    print(colors);
 
 //puts patterns[key] and their frequency [value] into a dictionary
     for(var rowNum=1; rowNum<table.getRowCount(); rowNum++){
@@ -74,7 +65,8 @@ function setup(){
                 pattern[patternChoices[i]] = 1; 
                 } 
         }
-    }    print(pattern);
+    }    
+    print(pattern);
 
     
     for(var rowNum=1; rowNum<table.getRowCount(); rowNum++){
@@ -89,17 +81,30 @@ function setup(){
                     alphabet[letterChoices[i]] = 1; 
                 }
             }
-        } print(alphabet);
+        }
+        print(alphabet);
+    
+//starting x and y position for Alphabet
+    var posX = 30;
+    var posY = 80;
+//creates a variable for every key value pair in alphabet 
+        //loops through the alphabet dictionary
+    for (var [key, value] of Object.entries(alphabet)){
+        if(posY > windowHeight - 80){
+            // increases x pos when windowHeight is reached
+            posX += 180;
+            //resets yPos
+            posY = 40;
+        }
+      //creates new Alphabet object and stores in objectAlpha array 
+      objectAlpha.push(new Alphabet(key, posX, posY + 30, map(value, 1, 22, 30, 200), color(random(colors)), random(fonts)));
+            posY += 150;
+    } 
+    print(objectAlpha);
 
-//there are several things that I want to happen once for every thing in the alphabet dictionary (random color selection, random posX &posY, random font selection)
-    //  for (var [key, value] of Object.entries(alphabet)){//for every key value pair in alphabet set a different textPosX and textPosY
-    //     var textPosX = random(50, windowWidth -50); 
-    //     var textPosY = random(50, windowHeight -50);
-    //     }
-    color = random(colors);
 }
 
-function draw(){
+function draw(){ 
     background(200);
 
     //background imgs 
@@ -113,22 +118,10 @@ function draw(){
     image(stripes, imgX - ((imgWidth*pattern["Diagonal Stripes"])/2), imgY - ((imgHeight*pattern["Diagonal Stripes"])/2), imgWidth*pattern["Diagonal Stripes"], imgHeight*pattern["Diagonal Stripes"]);
     image(chev, imgX - ((imgWidth*pattern["Chevron"])/2), imgY - ((imgHeight*pattern["Chevron"])/2), imgWidth*pattern["Chevron"], imgHeight*pattern["Chevron"]);
 
-    var textPosX = 50; 
-    var textPosY = 150;
-    var myFont = random(fonts);
-    for (var [key, value] of Object.entries(alphabet)){
-        if(textPosY > windowHeight - 50){
-            // this creates a new column
-            textPosX += 200;
-            // this sets the 'cursor' at the top of the new column
-            textPosY = 150;
-          }
-        fill(color); 
-        noStroke();
-        textFont(font5);
-        textSize(map(value, 1, 22, 20, 200));
-        text(key, textPosX, textPosY+ 10);
-        textPosY += 90; 
+//writes all of the Alphabet objects onto the canvas 
+    for (var i=0; i<objectAlpha.length; i++){
+        objectAlpha[i].write();
     }
+
 
 }

@@ -1,29 +1,22 @@
-class Letter {
-    constructor(letterString){
-        //splits choices in qOne by the comma 
-        //becomes an array of 
-        var letterChoices = letterString.split(","); 
-       
-
-        //letters keeps track of all the choices we just split by the comma
-        //how can i have all the times in the letterChoices array be assigned to letters?
-        this.letters = letterChoices[0];
-        // this.letters1 = letterChoices [1];
-        // this.letters2 = letterChoices [2];
-        // this.letters3 = letterChoices [3];
-        // this.letters4 = letterChoices [4];
-
+class Alphabet {
+    constructor(letterString, x, y, size, color, font){
         
-
-
-
-
-        // print(this.letters);
-       
+        this.textPosX = x; 
+        this.textPosY = y; 
+        this.size =size; 
+        this.col = color; 
+        this.font = font; 
+        this.letter = letterString; 
+    
     }
 
     write(){
-       
+        rectMode(CENTER);
+        fill(this.col); 
+        noStroke();
+        textFont(this.font);
+        textSize(this.size);
+        text(this.letter, this.textPosX , this.textPosY +50);
     }
 }
 
